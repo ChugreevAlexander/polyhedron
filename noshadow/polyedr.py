@@ -27,9 +27,15 @@ class Polyedr:
 
         # списки вершин, рёбер и граней полиэдра
         self.vertexes, self.edges, self.facets = [], [], []
+        
+        #Список хороших вершин
+        good_vertexes = []
+        
+        self.sum_dist = 0
 
         # список строк файла
         with open(file) as f:
+            vert_num = 0
             for i, line in enumerate(f):
                 if i == 0:
                     # обрабатываем первую строку; buf - вспомогательный массив
@@ -42,8 +48,11 @@ class Polyedr:
                     # во второй строке число вершин, граней и рёбер полиэдра
                     nv, nf, ne = (int(x) for x in line.split())
                 elif i < nv + 2:
+                    vert_num += 1
                     # задание всех вершин полиэдра
                     x, y, z = (float(x) for x in line.split())
+                    if R3(x, y, z).is_good():
+                        good_vertexes.append(vert_num)
                     self.vertexes.append(R3(x, y, z).rz(
                         alpha).ry(beta).rz(gamma) * c)
                 else:
@@ -54,10 +63,14 @@ class Polyedr:
                     # массив вершин этой грани
                     vertexes = [self.vertexes[int(n) - 1] for n in buf]
                     # задание рёбер грани
-                    for n in range(size):
-                        self.edges.append(Edge(vertexes[n - 1], vertexes[n]))
+                    for i in range(size):
+                        if int(buf[i-1]) in good_vertexes or int(buf[i]) in good_vertexes:
+                            self.sum_dist += (vertexes[i - 1].dist(
+                                    vertexes[i])) / c            
+                        self.edges.append(Edge(vertexes[i - 1], vertexes[i]))
                     # задание самой грани
                     self.facets.append(Facet(vertexes))
+        print(self.sum_dist)
 
     # Метод изображения полиэдра
     def draw(self, tk):

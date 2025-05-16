@@ -1,4 +1,4 @@
-from math import sin, cos
+from math import sin, cos, sqrt
 
 
 class R3:
@@ -42,15 +42,13 @@ class R3:
             self.z * other.x - self.x * other.z,
             self.x * other.y - self.y * other.x)
 
+    # Лежит ли не внутри круга x ^ 2 + y ^ 2 < 1
+    def is_good(self):
+        return self.x ** 2 + self.y ** 2 >= 1
+        
+    # Расстояние между двумя точками класса R3
+    def dist(self, other):
+        return sqrt((self.x - other.x) ** 2 
+                        + (self.y - other.y) ** 2
+                        + (self.z - other.z) ** 2)
 
-if __name__ == "__main__":  # pragma: no cover
-    x = R3(1.0, 1.0, 1.0)
-    print("x", type(x), x.__dict__)
-    y = x + R3(1.0, -1.0, 0.0)
-    print("y", type(y), y.__dict__)
-    y = y.rz(1.0)
-    print("y", type(y), y.__dict__)
-    u = x.dot(y)
-    print("u", type(u), u)
-    v = x.cross(y)
-    print("v", type(v), v.__dict__)

@@ -1,6 +1,6 @@
 import unittest
 
-from math import pi
+from math import pi, sqrt
 from common.r3 import R3
 from tests.matchers import R3ApproxMatcher
 
@@ -108,3 +108,39 @@ class TestR3(unittest.TestCase):
     def test_cross04(self):
         self.assertEqual(R3ApproxMatcher(self.a.cross(R3(3.0, -2.0, 1.0))),
                          R3(8.0, 8.0, -8.0))
+                         
+    def test_dist01(self):
+        a = R3(0.0, 0.0, 0.0)
+        self.assertAlmostEqual(a.dist(R3(3.0, 4.0, 0.0)), 5.0)
+     
+    def test_dist02(self):
+        a = R3(0.0, 0.0, 0.0)
+        self.assertAlmostEqual(a.dist(R3(3.0, 4.0, 12.0)), 13.0)
+
+    def test_dist03(self):
+        a = R3(-1.0, -2.0, -3.0)
+        self.assertAlmostEqual(a.dist(R3(3.0, 1.0, 9.0)), 13.0)
+
+    def test_dist04(self):
+        a = R3(1.0, 1.0, 3.0)
+        self.assertAlmostEqual(a.dist(R3(6.0, 1.0, 3.0)), 5.0)
+
+    def test_is_good01(self):
+        a = R3(0.0, 0.0, 0.0)
+        assert not a.is_good()
+
+    def test_is_good02(self):
+        a = R3(1.0, 2.0, 1.0)
+        assert a.is_good()
+
+    def test_is_good03(self):
+        a = R3(0.0, 0.0, 6.0)
+        assert not a.is_good()
+        
+    def test_is_good04(self):
+        a = R3(1.0, 1.0, 0.0)
+        assert a.is_good()
+        
+    def test_is_good05(self):
+        a = R3(-0.9, 0.0, 0.0)
+        assert not a.is_good()
